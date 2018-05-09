@@ -1,0 +1,9 @@
+#titleChart .x.axis text {
+    text-anchor: end !important;
+    transform: rotate(-45deg);
+}
+
+/*#titleChart > svg > g > g.axis.x > g{*/
+/*    text-anchor: end !important;*/
+/*    transform: rotate(-45deg);*/
+/*}*/
