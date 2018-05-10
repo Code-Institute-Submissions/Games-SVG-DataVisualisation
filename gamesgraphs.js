@@ -2,49 +2,128 @@ queue()
     .defer(d3.csv, "data/ign.csv")
     .await(makeGraph);
 
-function makeGraph(error, ignData)  {
+function makeGraph(error, ignData) {
     let ndx = crossfilter(ignData);
     let titleDim = ndx.dimension(dc.pluck("platform"));
-        let totalCountBytitle = titleDim.group();
-        let barColors = d3.scale.ordinal().range(["red","blue","green","yellow"]);
-        let titleChart = dc.barChart("#titleChart");
-        titleChart
+    let totalCountBytitle = titleDim.group();
+    let barColors = d3.scale.ordinal().range(["red", "blue", "green", "yellow"]);
+    let titleChart = dc.barChart("#titleChart");
+    titleChart
         .width(1100)
         .height(600)
-        .margins({bottom:100, top:20, left:30, right:10})
+        .margins({ bottom: 100, top: 20, left: 30, right: 10 })
         .dimension(titleDim)
         .group(totalCountBytitle)
         .x(d3.scale.ordinal())
         .xUnits(dc.units.ordinal)
         .yAxisLabel("No of Releases")
         .colorAccessor(function(d) {
-			return d.key;
+            return d.key;
         })
-		.colors(barColors)
+        .colors(barColors)
         .yAxis().ticks(4)
-  
- 
-        let genreDim = ndx.dimension(dc.pluck("genre"));
-        let totalCountByGenre = genreDim.group();
-        let genreChart = dc.barChart("#genreChart");
-        genreChart
+
+
+    let genreDim = ndx.dimension(dc.pluck("genre"));
+    let totalCountByGenre = genreDim.group();
+    let genreChart = dc.barChart("#genreChart");
+    genreChart
         .width(1100)
         .height(600)
-        .margins({bottom:100, top:20, left:30, right:10})
+        .margins({ bottom: 100, top: 20, left: 30, right: 10 })
         .dimension(genreDim)
         .group(totalCountByGenre)
         .x(d3.scale.ordinal())
         .xUnits(dc.units.ordinal)
         .yAxisLabel("No of Releases")
         .colorAccessor(function(d) {
-			return d.key;
+            return d.key;
         })
-		.colors(barColors)
+        .colors(barColors)
         .yAxis().ticks(4)
-        
-        
+
+
+
+    let genreAvDim = ndx.dimension(dc.pluck("genre"));
+    let averageScore = genreDim.group().reduce(
+        function(p, v) {
+            ++p.count;
+            p.total += +v.score;
+            p.average = p.total / p.count;
+            return p;
+        },
+        function(p, v) {
+            --p.count;
+            if (p.count == 0) {
+                p.total = 0;
+                p.average = 0;
+            }
+            else {
+                p.total -= +v.score;
+                p.average = p.total / p.count;
+            };
+            return p;
+        },
+        function() {
+            return { count: 0, total: 0, average: 0 };
+        }
+    );
+    console.log(averageScore.all())
+    let averageScoreChart = dc.rowChart("#averageScore-chart");
+    averageScoreChart
+        .width(500)
+        .height(300)
+        .dimension(genreAvDim)
+        .group(averageScore)
+        .valueAccessor(function(p) {
+                    return p.value.average;
+                })
+        .cap(10)
+        .othersGrouper(false)
+        .xAxis().ticks(4)
+
+    dc.renderAll();
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*---------------------    
      
-     
+     let parseDate = d3.time.format("%d/%m/%Y").parse;
+
+    transactionsData.forEach(function(d) {
+        d.date = parseDate(d.date);
+    });
+
+    let dateDim = ndx.dimension(dc.pluck("date"));
+
+    let minDate = dateDim.bottom(1)[0].date;
+    let maxDate = dateDim.top(1)[0].date;
+    
+    let nameDim = ndx.dimension(dc.pluck("name"));
+    let spendGroup = nameDim.group().reduceSum(dc.pluck("spend"));
+    
+    let spendChart = dc.barChart("#spend-chart");
+    let barColors = d3.scale.ordinal().range(["red","blue","green","yellow"]);
+    spendChart
+    .width(500)
+    .height(300)
+    .dimension(nameDim)
+    .group(spendGroup)
+    .x(d3.scale.ordinal())
+    .xUnits(dc.units.ordinal)
+    .xAxisLabel("Person");
+    
      
      
         dc.renderAll()
@@ -167,7 +246,4 @@ function makeGraph(error, ignData)  {
 //             .colors("blue")
 //             .group(assocProfSalary, "AssocProf")
 
-        //  ])
-        
-  
-
+//  ])
