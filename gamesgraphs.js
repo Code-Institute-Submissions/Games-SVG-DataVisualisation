@@ -2,30 +2,53 @@ queue()
     .defer(d3.csv, "data/ign.csv")
     .await(makeGraph);
 
-function makeGraph(error, ignData) {
+function makeGraph(error, ignData)  {
     let ndx = crossfilter(ignData);
     let titleDim = ndx.dimension(dc.pluck("platform"));
         let totalCountBytitle = titleDim.group();
         let barColors = d3.scale.ordinal().range(["red","blue","green","yellow"]);
         let titleChart = dc.barChart("#titleChart");
         titleChart
-        .width(1200)
+        .width(1100)
         .height(600)
-        .margins({bottom:80, top:20, left:10, right:10})
+        .margins({bottom:100, top:20, left:30, right:10})
         .dimension(titleDim)
         .group(totalCountBytitle)
         .x(d3.scale.ordinal())
         .xUnits(dc.units.ordinal)
-        .yAxisLabel("No of Releas")
+        .yAxisLabel("No of Releases")
+        .colorAccessor(function(d) {
+			return d.key;
+        })
+		.colors(barColors)
+        .yAxis().ticks(4)
+  
+ 
+        let genreDim = ndx.dimension(dc.pluck("genre"));
+        let totalCountByGenre = genreDim.group();
+        let genreChart = dc.barChart("#genreChart");
+        genreChart
+        .width(1100)
+        .height(600)
+        .margins({bottom:100, top:20, left:30, right:10})
+        .dimension(genreDim)
+        .group(totalCountByGenre)
+        .x(d3.scale.ordinal())
+        .xUnits(dc.units.ordinal)
+        .yAxisLabel("No of Releases")
         .colorAccessor(function(d) {
 			return d.key;
         })
 		.colors(barColors)
         .yAxis().ticks(4)
         
-  
         
+     
+     
+     
+     
         dc.renderAll()
+
 }
         
         
