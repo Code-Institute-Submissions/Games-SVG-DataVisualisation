@@ -1,3 +1,11 @@
+body {
+    padding-left: 10px;
+}
+
+.container {
+    width: 100%
+}
+
 #titleChart .x.axis text {
     text-anchor: end !important;
     transform: rotate(-45deg);
@@ -6,6 +14,18 @@
 #genreChart .x.axis text {
     text-anchor: end !important;
     transform: rotate(-45deg);
+}
+
+.title h1 {
+    text-align: center;
+}
+.reset_button {
+    text-align: center;
+    
+}
+
+.releases {
+    padding-left: 0;
 }
 
 /*#titleChart > svg > g > g.axis.x > g{*/

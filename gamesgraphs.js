@@ -1,6 +1,8 @@
 queue()
     .defer(d3.csv, "data/ign.csv")
     .await(makeGraph);
+    
+let obj = {};
 
 function makeGraph(error, ignData) {
     let ndx = crossfilter(ignData);
@@ -9,7 +11,7 @@ function makeGraph(error, ignData) {
     let barColors = d3.scale.ordinal().range(["red", "blue", "green", "yellow"]);
     let titleChart = dc.barChart("#titleChart");
     titleChart
-        .width(1100)
+        .width(1000)
         .height(600)
         .margins({ bottom: 100, top: 20, left: 30, right: 10 })
         .dimension(titleDim)
@@ -25,10 +27,15 @@ function makeGraph(error, ignData) {
 
 
     let genreDim = ndx.dimension(dc.pluck("genre"));
+    let gameNameDim = ndx.dimension(dc.pluck("title"));
+    
+    obj.gameName = gameNameDim;
+   //console.log(obj)
+
     let totalCountByGenre = genreDim.group();
     let genreChart = dc.barChart("#genreChart");
     genreChart
-        .width(1100)
+        .width(1000)
         .height(600)
         .margins({ bottom: 100, top: 20, left: 30, right: 10 })
         .dimension(genreDim)
@@ -41,6 +48,50 @@ function makeGraph(error, ignData) {
         })
         .colors(barColors)
         .yAxis().ticks(4)
+
+
+let titles = ndx.dimension(dc.pluck("title"));
+    let titlesReduced = titles.group().reduce(
+        function(p, v) {
+            ++p.count;
+            p.total += +v.score;
+            p.average = p.total / p.count;
+            return p;
+        },
+        function(p, v) {
+            --p.count;
+            if (p.count == 0) {
+                p.total = 0;
+                p.average = 0;
+            }
+            else {
+                p.total -= +v.score;
+                p.average = p.total / p.count;
+            };
+            return p;
+        },
+        function() {
+            return { count: 0, total: 0, average: 0 };
+        }
+    );
+    
+    let titlesAll = titlesReduced.all();
+
+    function titleSelectMenu () {
+        let value;
+        
+           
+    for (var key in titlesAll) {
+      
+       let titles = titlesAll[key]["key"]
+           
+    }
+        
+    }
+    
+    titleSelectMenu();
+ 
+    
 
 
 
@@ -68,25 +119,59 @@ function makeGraph(error, ignData) {
             return { count: 0, total: 0, average: 0 };
         }
     );
-    console.log(averageScore.all())
+    //console.log(averageScore.all())
     let averageScoreChart = dc.rowChart("#averageScore-chart");
     averageScoreChart
-        .width(500)
-        .height(300)
+        .width(600)
+        .height(500)
         .dimension(genreAvDim)
         .group(averageScore)
         .valueAccessor(function(p) {
-                    return p.value.average;
-                })
+            return p.value.average;
+        })
         .cap(10)
         .othersGrouper(false)
         .xAxis().ticks(4)
+
+    let editorschoiceDim = ndx.dimension(dc.pluck("editors_choice"));
+    let totalcounteditorschoice = editorschoiceDim.group();
+        dc.pieChart("#editors_choice-Piechart")
+        .height(400)
+        .radius(250)
+        .dimension(editorschoiceDim)
+        .group(totalcounteditorschoice);
+        
+    let scorephraseDim = ndx.dimension(dc.pluck("score_phrase"));
+    let totalcountscorephrase = scorephraseDim.group();
+        dc.pieChart("#score_phrase-Piechart")
+        .height(400)
+        .radius(250)
+        .dimension(scorephraseDim)
+        .group(totalcountscorephrase);
+        
+
+
 
     dc.renderAll();
 }
 
 
+// let dataObject = {
+//     "data": "data/ign.csv"
+// }
 
+// function submitTitle() {
+    
+// }
+
+// var valuetitle =  [
+//   'title',
+//   'release_year',
+//   { data: ['id'] },
+//   { title: 'timestamp', attr: 'data-timestamp' },
+//    { title: 'link', attr: 'href' },
+//   { title: 'image', attr: 'src' }
+// ];
 
 
 
