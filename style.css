@@ -1,14 +1,20 @@
 body {
     padding-left: 10px;
+    background-image: url("images/backgroundgame.png");
+    background-repeat: no-repeat;
+    background-size: cover;
+    color: red;
 }
 
 .container {
-    width: 100%
+    width: 100%;
 }
 
 #titleChart .x.axis text {
     text-anchor: end !important;
     transform: rotate(-45deg);
+    color: red;
+    
 }
 
 #genreChart .x.axis text {

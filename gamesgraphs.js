@@ -150,6 +150,45 @@ let titles = ndx.dimension(dc.pluck("title"));
         .group(totalcountscorephrase);
         
 
+ let yearDim = ndx.dimension(dc.pluck("release_year"))
+ let minYear = yearDim.bottom(1)[0].release_year
+ let maxYear = yearDim.top(1)[0].release_year
+ 
+ let yearScoreDim = ndx.dimension(function(d){
+     return [d.release_year, d.score];
+ })
+ 
+ let yearScoreGroup = yearScoreDim.group();
+ dc.scatterPlot("#scatteredChart")
+    .width (800)
+    .height (400)
+    .x(d3.scale.linear().domain([minYear, maxYear]))
+    .symbolSize(8)
+    .clipPadding(10)
+    .dimension(yearScoreDim)
+    .group(yearScoreGroup)
+
+
+// let dayDim = ndx.dimension(dc.pluck("release_day"))
+//  let minDay = dayDim.bottom(1)[0].release_day
+//  let maxDay = dayDim.top(1)[0].release_day
+ 
+//  let dayScoreDim = ndx.dimension(function(d){
+//      return [d.release_year, d.score];
+//  })
+ 
+//  let dayScoreGroup = dayScoreDim.group();
+//  dc.scatterPlot("#releaseDayChart")
+//     .width (800)
+//     .height (700)
+//     .x(d3.scale.linear().domain([minDay, maxDay]))
+//     .symbolSize(8)
+//     .clipPadding(10)
+//     .dimension(dayScoreDim)
+//     .group(dayScoreGroup)
+
+
+
 
 
     dc.renderAll();
