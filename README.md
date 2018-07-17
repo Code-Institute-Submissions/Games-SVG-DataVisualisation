@@ -1,5 +1,7 @@
 #This Project was meant for Education purpose only.
 
+# The site is published at https://sweetmentor.github.io/Games-SVG-DataVisualisation/
+
 # 20 Years of Games Data Visualisation.
 
 ## Overview:
