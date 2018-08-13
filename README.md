@@ -29,13 +29,13 @@ The chart dash board has been designed to visually show the relationship between
 
 
 ## Tech Used
-This was created using d3, DC and crossfilter.
-This is built using JavaScript, HTML and CSS for styling.
+This was created .
+This is built with JavaScript using d3, DC and crossfilter, HTML and CSS for styling.
 * HTML and JavaScript
 Base languages used to create the chart
 * CSS and Bootstrap
 Used to style the dashboard.
-* Cloud 9 - Used to build the project.
+* Cloud 9 - platform used to build the project.
 * Github and Github Pages - Used to track the progress of the project, and host the site for submission.
 
 
